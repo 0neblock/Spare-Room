@@ -20,6 +20,15 @@
             getRooms();
         });
         
+        function deleteRoom(room, day, hour){
+            var deleteArray = {'room': room, 'day': day, 'hour': hour};
+            if(confirm("Remove this Room from 'Free' list permanently ?")){
+                $.post("delete_room.php", deleteArray, function(data){
+                    getRooms();
+                });
+            }
+        }
+        
         function submit(){
             var postArray = {room: roomString};
             $.post("post_room.php", postArray, function(data){});
@@ -31,7 +40,7 @@
                 console.log(data);
                 if(data.roomsAvailable > 0){
                     $.each(data.formatted.current, function(index, room){
-                        $("#current").append("<li data-theme='a'><b>" + room.room + "</b> until " + room.endTime + "</li>");
+                        $("#current").append("<li data-theme='a' onclick=\"deleteRoom('" + room.room + "', " + room.day + ", " + room.hour + ")\"><b>" + room.room + "</b> for " + room.hours + " hour(s)</li>");
                         $("#current").listview("refresh");
                     });
                     $("#upcoming").html("");
@@ -53,8 +62,8 @@
         }
         
         function clickBuilding(buildNum){
+            $("#levelUL").html("");
             building = buildNum;
-            roomString = building.toString();
             for(var i = 1; i <= levels; i++){
                 $("#levelUL").append("<li><a href='#rooms' onclick='clickLevel($(this).html())'>" + i + "</a></li>");
                 $("#levelUL").trigger("create");
@@ -62,7 +71,7 @@
         }
         
         function clickLevel(levelNum){
-            level = levelNum;
+            $("#roomUL").html("");
             roomString += "." + level.toString();
             for(var i = 1; i <= rooms; i++){
                 $("#roomUL").append("<li><a href='#confirm' onclick='clickRoom($(this).html())'>" + i + "</a></li>");
@@ -72,9 +81,10 @@
         
         function clickRoom(roomNum){
             room = roomNum;
-            roomString += "." + room.toString();
+            roomString = building.toString() + "." + level.toString() + "." + room.toString();
             console.log(roomString);
-            $("#roomConfirm").append("<li>Room " + roomString + "</li><br /><li><a href='#' onclick='submit(); location.href = \"#main\"; getRooms()'>Confirm</a></li>");
+            $("#roomConfirm").html("");
+            $("#roomConfirm").append("<li>Room " + roomString + " is Free right now</li><br /><li><a href='#' onclick='submit(); location.href = \"#main\"; getRooms()'>Confirm?</a></li>");
             $("#roomConfirm").trigger("create");
         }
     </script>
@@ -98,18 +108,22 @@
         </div> 
         <div data-role="page" id="levels"> 
             <div data-role="content">
+                <a class="ui-btn ui-btn-inline" href="#main" data-inline="true" >Back</a>
                 <b>Select Level:</b>
                 <ul data-role="listview" id="levelUL" data-inset="true"></ul>
             </div> 
         </div> 
         <div data-role="page" id="rooms"> 
             <div data-role="content">
+                <a class="ui-btn ui-btn-inline" href="#levels" data-inline="true" >Back</a>
                 <b>Select Room:</b>
                 <ul data-role="listview" id="roomUL" data-inset="true"></ul>
             </div> 
         </div> 
         <div data-role="page" id="confirm"> 
             <div data-role="content" >
+                <a class="ui-btn ui-btn-inline" href="#main" data-inline="true" >Home</a>
+                <a class="ui-btn ui-btn-inline" href="#rooms" data-inline="true" >Back</a>
                 <ul data-role="listview" id="roomConfirm" data-inset="true">
                     
                 </ul>

@@ -41,7 +41,7 @@ for($i = 0; $i < mysqli_num_rows($query); $i++){
         }
     }
     if($room['hour'] == $hourNum){
-        array_push($formattedArray["current"], array("room" => $room['room'], "startTime" => $startTime, "endTime" => $endTime, "hours" => 1));
+        array_push($formattedArray["current"], array("room" => $room['room'], "startTime" => $startTime, "endTime" => $endTime, "hours" => 1, "day" => $room['day'], "hour" => $room['hour']));
     }
     
     array_push($roomsArray, array("room" => $room['room'], "startTime" => $startTime, "endTime" => $endTime, "day" => $room['day']));
