@@ -1,0 +1,119 @@
+<html>
+<head>
+    <title>RMIT Spare Room</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <style>
+    
+    </style>
+    <script>
+        var roomString = "";
+        var room = 0;
+        var level = 0;
+        var building = 0;
+        var levels = 11;
+        var rooms = 15;
+        
+        $(function(){
+            getRooms();
+        });
+        
+        function submit(){
+            var postArray = {room: roomString};
+            $.post("post_room.php", postArray, function(data){});
+        }
+        
+        function getRooms(){
+            $.getJSON("get_rooms.php", function(data){
+                $("#current").html("");
+                console.log(data);
+                if(data.roomsAvailable > 0){
+                    $.each(data.formatted.current, function(index, room){
+                        $("#current").append("<li data-theme='a'><b>" + room.room + "</b> until " + room.endTime + "</li>");
+                        $("#current").listview("refresh");
+                    });
+                    $("#upcoming").html("");
+                    if(data.formatted.freeFrom.length){
+                        console.log("hey");
+                        $.each(data.formatted.freeFrom, function(index, room){
+                            $("#upcoming").append("<li data-theme='a'><b>" + room.room + "</b> is free from " + room.startTime + " until " + room.endTime + "</li>");
+                            $("#upcoming").listview("refresh");
+                        });
+                    } else {
+                        $("#upcomingText").hide();
+                    }
+                } else {
+                    $("#current").html(data.message);
+                    $("#currentText").hide();
+                    $("#upcomingText").hide();
+                }
+            });
+        }
+        
+        function clickBuilding(buildNum){
+            building = buildNum;
+            roomString = building.toString();
+            for(var i = 1; i <= levels; i++){
+                $("#levelUL").append("<li><a href='#rooms' onclick='clickLevel($(this).html())'>" + i + "</a></li>");
+                $("#levelUL").trigger("create");
+            }
+        }
+        
+        function clickLevel(levelNum){
+            level = levelNum;
+            roomString += "." + level.toString();
+            for(var i = 1; i <= rooms; i++){
+                $("#roomUL").append("<li><a href='#confirm' onclick='clickRoom($(this).html())'>" + i + "</a></li>");
+                $("#roomUL").trigger("create");
+            }
+        }
+        
+        function clickRoom(roomNum){
+            room = roomNum;
+            roomString += "." + room.toString();
+            console.log(roomString);
+            $("#roomConfirm").append("<li>Room " + roomString + "</li><br /><li><a href='#' onclick='submit(); location.href = \"#main\"; getRooms()'>Confirm</a></li>");
+            $("#roomConfirm").trigger("create");
+        }
+    </script>
+    </head>
+    <body>
+        <div data-role="page" id="main"> 
+            <div data-role="header">
+                <h1>RMIT Room Hunter</h1>
+            </div>
+            <div data-role="content" >
+                <div data-role="controlgroup" >
+                   <span id="currentText"> Current:</span>
+                <ul data-role="listview" id="current" data-inset="true"></ul>
+                    <span id="upcomingText" >Upcoming: </span>
+                <ul data-role="listview" id="upcoming" data-inset="true"></ul>
+                    
+                    Add Free Room:
+                <ul data-role="listview" id="buildingPicker" data-inset="true"><li><a href="#levels" data-icon="forward" onClick='clickBuilding($(this).html())'>80</a></li></ul>
+            </div>
+            </div> 
+        </div> 
+        <div data-role="page" id="levels"> 
+            <div data-role="content">
+                <b>Select Level:</b>
+                <ul data-role="listview" id="levelUL" data-inset="true"></ul>
+            </div> 
+        </div> 
+        <div data-role="page" id="rooms"> 
+            <div data-role="content">
+                <b>Select Room:</b>
+                <ul data-role="listview" id="roomUL" data-inset="true"></ul>
+            </div> 
+        </div> 
+        <div data-role="page" id="confirm"> 
+            <div data-role="content" >
+                <ul data-role="listview" id="roomConfirm" data-inset="true">
+                    
+                </ul>
+            </div> 
+        </div> 
+    </body>
+</html>
