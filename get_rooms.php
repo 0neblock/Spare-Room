@@ -23,7 +23,7 @@ $roomsInARow = array();
 
 $allRooms = array();
 
-$query = mysqli_query($con, "SELECT * FROM rooms WHERE `day` = '$dayNum' AND `hour` >= '$hourNum' AND `hour` <= '$advanceHours' ORDER BY `room` ASC") or die(mysqli_error($con));
+$query = mysqli_query($con, "SELECT * FROM rooms WHERE `day` = '$dayNum' AND `hour` >= '$hourNum' AND `hour` <= '$advanceHours' ORDER BY `room` ASC, `hour` ASC") or die(mysqli_error($con));
 $i = 0;
 $roomsArray = array();
 $formattedArray = array("current" => array(), "freeFrom" => array());
@@ -68,7 +68,7 @@ $array["rooms"] = $roomsArray;
 $array["formatted"] = $formattedArray;
 $array["roomsAvailable"] = sizeof($formattedArray["current"]);
 if(!$array["roomsAvailable"]){
-    $array["message"] = "No Current Rooms Available.";
+    $array["message"] = "No Rooms Available.";
 }
 
 if(!$i){
