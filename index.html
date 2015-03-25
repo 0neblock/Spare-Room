@@ -14,13 +14,13 @@
         var level = 0;
         var building = 0;
         var levels = 11;
-        var rooms = 15;
+        var rooms = 25;
+        var buildings = [];
         
         $(function(){
             getRooms();
-             $("#levelUL").trigger("create");
-             $("#roomUL").trigger("create");
-             $("#roomConfirm").trigger("create");
+            populateBuildings();
+
         });
         
         function deleteRoom(room, day, hour){
@@ -34,14 +34,16 @@
         
         function submit(){
             var postArray = {room: roomString};
+            $.mobile.loading("show");
             $.post("post_room.php", postArray, function(data){
+                $.mobile.loading("hide");
                 location.href = "#main";
                 getRooms();
             });
         }
         
         function getRooms(){
-            $.getJSON("get_rooms.php", function(data){
+            $.getJSON("get_rooms.php?advanceHours=2", function(data){
                 $("#current").html("");
                 console.log(data);
                 if(data.roomsAvailable > 0){
@@ -52,9 +54,11 @@
                     $("#upcoming").html("");
                     
                 } else {
-                    $("#current").html(data.message);
+                    $("#current").html("<li>" + data.message + "</li>");
+                    $("#current").listview("refresh");
                     $("#currentText").hide();
                 }
+                if(data.formatted){
                 if(data.formatted.freeFrom.length){
                         console.log("hey");
                         $.each(data.formatted.freeFrom, function(index, room){
@@ -64,10 +68,31 @@
                     } else {
                         $("#upcomingText").hide();
                     }
+                }
             });
         }
         
-        function clickBuilding(buildNum){
+        function populateBuildings(){
+            $.getJSON("get_buildings.php", function(data){
+                console.log(data);
+                if(data.status == "OK"){
+                    $("#buildingPicker").trigger("create");
+                    console.log(data.buildings);
+                    $.each(data.buildings, function(index, building){
+                        $("#buildingPicker").append("<li><a data-icon='forward' onClick='clickBuilding($(this).html(), " + building.levels + ", " + building.rooms + ")'>" + building.building + "</a></li>");
+                        $("#buildingPicker").listview("refresh");
+                    });
+
+                    $("#levelUL").trigger("create");
+                    $("#roomUL").trigger("create");
+                    $("#roomConfirm").trigger("create");
+                }
+            });
+        }
+
+        function clickBuilding(buildNum, buildingLevels, buildingRooms){
+            levels = buildingLevels;
+            rooms = buildingRooms;
             $("#levelUL").html("");
             location.href = "#levels";
             building = buildNum;
@@ -116,7 +141,9 @@
                 <ul data-role="listview" id="upcoming" data-inset="true"></ul>
                     
                     Add Free Room:
-                <ul data-role="listview" id="buildingPicker" data-inset="true"><li><a data-icon="forward" onClick='clickBuilding($(this).html())'>80</a></li></ul>
+                <ul data-role="listview" id="buildingPicker" data-inset="true">
+
+                        </ul>
             </div>
             </div> 
         </div> 
