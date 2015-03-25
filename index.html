@@ -20,7 +20,6 @@
         $(function(){
             getRooms();
             populateBuildings();
-
         });
         
         function deleteRoom(room, day, hour){
@@ -73,11 +72,12 @@
         }
         
         function populateBuildings(){
+
             $.getJSON("get_buildings.php", function(data){
+                $("#buildingPicker").html("");
                 console.log(data);
                 if(data.status == "OK"){
                     $("#buildingPicker").trigger("create");
-                    console.log(data.buildings);
                     $.each(data.buildings, function(index, building){
                         $("#buildingPicker").append("<li><a data-icon='forward' onClick='clickBuilding($(this).html(), " + building.levels + ", " + building.rooms + ")'>" + building.building + "</a></li>");
                         $("#buildingPicker").listview("refresh");
@@ -126,6 +126,24 @@
             $("#roomConfirm").trigger("create");
             $("#roomConfirm").listview("refresh");;
         }
+
+
+        function addBuilding(){
+            $("#addBuilding").val("Posting...");
+            var addnumber = $("#addnumber").val();
+            $("#addnumber").val("");
+            var addlevels = $("#addlevels").val();
+            $("#addlevels").val("");
+            var addrooms = $("#addrooms").val();
+            $("#addrooms").val("");
+            $.post("post_building.php", {"number": addnumber, "levels": addlevels, "rooms": addrooms}, function(data){
+                console.log(data);
+                populateBuildings();
+                getRooms();
+                $("#buildingPopup").popup("close");
+
+            });
+        }
     </script>
     </head>
     <body>
@@ -144,6 +162,14 @@
                 <ul data-role="listview" id="buildingPicker" data-inset="true">
 
                         </ul>
+                    <button onclick="$('#buildingPopup').popup('open');">Add a Building</button>
+                    <div id="buildingPopup" data-role="popup" style="padding: 20px;" data-theme="b">
+                    <h3>Add a Building:</h3><br />
+                        Building: <input data-inline="true" type="number" id="addnumber" name="number"><br />
+                        Levels: <input data-inline="true" type="number" id="addlevels" name="number"><br />
+                        Rooms: <input data-inline="true" type="number" id="addrooms" name="number"><br />
+                        <input type="button" value="Go!" id="addBuilding" onclick="addBuilding()"/>
+                    </div>
             </div>
             </div> 
         </div> 

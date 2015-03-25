@@ -7,7 +7,6 @@ $array = array();
 $time = time();
 $dayNum = date("N", $time);
 $hourNum = date("G", $time);
-$hourNum = 11;
 $minuteNum = date("i",$time);
 if($minuteNum >= 30){
     $hourNum++;
