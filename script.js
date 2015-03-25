@@ -6,6 +6,8 @@ var levels = 11;
 var rooms = 25;
 var buildings = [];
 
+$.mobile.loading("show");
+
 $(function(){
     getRooms();
     populateBuildings();
@@ -31,7 +33,8 @@ function submit(){
 }
 
 function getRooms(){
-    $.getJSON("get_rooms.php?advanceHours=2", function(data){
+    $.mobile.loading("show");
+    $.getJSON("get_rooms.php?advanceHours=3", function(data){
         $("#current").html("");
         console.log(data);
         if(data.roomsAvailable > 0){
@@ -58,6 +61,7 @@ function getRooms(){
                 $("#upcomingText").hide();
             }
         }
+        $.mobile.loading("hide");
     });
 }
 
@@ -129,7 +133,6 @@ function addBuilding(){
     $.post("post_building.php", {"number": addnumber, "levels": addlevels, "rooms": addrooms}, function(data){
         console.log(data);
         populateBuildings();
-        getRooms();
         $("#buildingPopup").popup("close");
 
     });
