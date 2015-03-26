@@ -73,6 +73,7 @@ function populateBuildings(){
         console.log(data);
         if(data.status == "OK"){
             $("#buildingPicker").trigger("create");
+            var numBuildings = data.buildings.length;
             $.each(data.buildings, function(index, building){
                 $("#buildingPicker").append("<li><a data-icon='forward' onClick='clickBuilding($(this).html(), " + building.levels + ", " + building.rooms + ")'>" + building.building + "</a></li>");
                 $("#buildingPicker").listview("refresh");
@@ -81,6 +82,7 @@ function populateBuildings(){
             $("#levelUL").trigger("create");
             $("#roomUL").trigger("create");
             $("#roomConfirm").trigger("create");
+            $("#roomsDiv").css("margin-bottom", "100" + (50 * numBuildings))
         }
     });
 }
