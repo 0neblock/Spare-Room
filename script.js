@@ -5,6 +5,7 @@ var building = 0;
 var levels = 11;
 var rooms = 25;
 var buildings = [];
+var advanceHours = 2;
 
 $.mobile.loading("show");
 
@@ -34,7 +35,7 @@ function submit(){
 
 function getRooms(){
     $.mobile.loading("show");
-    $.getJSON("get_rooms.php?advanceHours=3", function(data){
+    $.getJSON("get_rooms.php?advanceHours=" + advanceHours, function(data){
         $("#current").html("");
         console.log(data);
         if(data.roomsAvailable > 0){
