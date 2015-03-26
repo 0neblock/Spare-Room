@@ -6,19 +6,21 @@
     </head>
     <body>
         <div data-role="page" id="main"> 
-            <div data-role="header">
+            <div data-role="header" style="position: fixed; width:100%;">
                 <h1>RMIT Room Hunter</h1>
             </div>
-            <div data-role="content" >
+            <div data-role="content" style="margin-top: 30px;">
                 <div data-role="controlgroup" >
                    <span id="currentText"> Current:</span>
                 <ul data-role="listview" id="current" data-inset="true"></ul>
                     <span id="upcomingText" >Upcoming: </span>
                 <ul data-role="listview" id="upcoming" data-inset="true"></ul>
-                    
-                    Add Free Room:
+                    </div>
+                </div> 
+            
+                    <div style="position: fixed; bottom: 0px; width: 93%;" data-role="content" data-theme="a">
                 <ul data-role="listview" id="buildingPicker" data-inset="true">
-
+                    
                         </ul>
                     <button onclick="$('#buildingPopup').popup('open');">Add a Building</button>
                     <div id="buildingPopup" data-role="popup" style="padding: 20px;" data-theme="b">
@@ -28,8 +30,9 @@
                         Rooms: <input data-inline="true" type="number" id="addrooms" name="number"><br />
                         <input type="button" value="Go!" id="addBuilding" onclick="addBuilding()"/>
                     </div>
-            </div>
-            </div> 
+                    </div>
+            
+            
         </div> 
         <div data-role="page" id="levels"> 
             <div data-role="content">
