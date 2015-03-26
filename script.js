@@ -82,7 +82,7 @@ function populateBuildings(){
             $("#levelUL").trigger("create");
             $("#roomUL").trigger("create");
             $("#roomConfirm").trigger("create");
-            $("#roomsDiv").css("margin-bottom", "100" + (50 * numBuildings))
+            $("#roomsDiv").css("margin-bottom", (100 + (50 * numBuildings)) + "px");
         }
     });
 }
