@@ -41,7 +41,7 @@ for($i = 0; $i < mysqli_num_rows($query); $i++){
         }
     }
     if($room['hour'] == $hourNum){
-        array_push($formattedArray["current"], array("room" => $room['room'], "startTime" => $startTime, "endTime" => $endTime, "hours" => 1, "day" => $room['day'], "hour" => $room['hour']));
+        array_push($formattedArray["current"], array("room" => $room['room'], "startTime" => $startTime, "endTime" => $endTime, "hours" => 1,"until" => $endTime, "day" => $room['day'], "hour" => $room['hour']));
     }
     
     array_push($roomsArray, array("room" => $room['room'], "startTime" => $startTime, "endTime" => $endTime, "day" => $room['day']));
@@ -57,7 +57,9 @@ for($i = 0; $i < sizeof($allRooms); $i++){
         // this room has more slots
         for($j = 0; $j < sizeof($formattedArray["current"]); $j++){
             if($formattedArray["current"][$j]["room"] == $allRooms[$i]){
-                $formattedArray["current"][$j]["hours"] = $roomsInARow[$allRooms[$i]]["num"];
+                $oldUntil = strtotime($formattedArray["current"][$j]["until"]);
+                
+                $formattedArray["current"][$j]["until"] = $roomsInARow[$allRooms[$i]]["num"];
             }
         }
         

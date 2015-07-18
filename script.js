@@ -16,7 +16,7 @@ $(function(){
 
 function deleteRoom(room, day, hour){
     var deleteArray = {'room': room, 'day': day, 'hour': hour};
-    if(confirm("Remove this Room from 'Free' list permanently ?")){
+    if(confirm("Remove " + room + " from 'Free' list permanently ?")){
         $.post("delete_room.php", deleteArray, function(data){
             getRooms();
         });
@@ -40,7 +40,7 @@ function getRooms(){
         console.log(data);
         if(data.roomsAvailable > 0){
             $.each(data.formatted.current, function(index, room){
-                $("#current").append("<li data-theme='a' onclick=\"deleteRoom('" + room.room + "', " + room.day + ", " + room.hour + ")\"><b>" + room.room + "</b> for " + room.hours + " hour(s)</li>");
+                $("#current").append("<li data-theme='a' onclick=\"deleteRoom('" + room.room + "', " + room.day + ", " + room.hour + ")\"><b>" + room.room + "</b> until <b>" + room.until + "</b></li>");
                 $("#current").listview("refresh");
             });
             $("#upcoming").html("");
@@ -119,7 +119,7 @@ function clickRoom(roomNum){
     console.log(roomString);
     $("#roomConfirm").html("");
     location.href = "#confirm";
-    $("#roomConfirm").append("<li>Room " + roomString + " is Free right now</li><br /><li><a href='#' onclick='submit();'>Confirm?</a></li>");
+    $("#roomConfirm").append("<li>Room " + roomString + " is free right now</li><br /><li><a href='#' onclick='submit();'>Confirm?</a></li>");
     $("#roomConfirm").trigger("create");
     $("#roomConfirm").listview("refresh");;
 }
